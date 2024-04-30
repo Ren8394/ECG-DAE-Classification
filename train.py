@@ -57,7 +57,7 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters(), lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.8)
 
-    best_loss = -np.inf
+    best_loss = np.inf
     train_loss = []
     val_loss = []
     for epoch in trange(epochs, desc="FCN_DAE Training"):
