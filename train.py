@@ -119,10 +119,10 @@ if __name__ == "__main__":
         if current_val_loss < best_loss:
             best_loss = average_val_loss
             Path("./weights").mkdir(parents=True, exist_ok=True)
-            torch.save(model.state_dict(), f"./weights/FCN_DAE_{str(lr).split('.')[-1]}.pth")
+            torch.save(model.state_dict(), f"./weights/FCN_DAE_lr{str(lr).split('.')[-1]}.pth")
 
     # save loss
-    Path("./results").mkdir(parents=True, exist_ok=True)
+    Path("./results/FCN_DAE/").mkdir(parents=True, exist_ok=True)
     np.savetxt("./results/FCN_DAE/train_loss.txt", np.array(train_loss), fmt="%.4f")
     np.savetxt("./results/FCN_DAE/val_loss.txt", np.array(val_loss), fmt="%.4f")
 
