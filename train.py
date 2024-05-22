@@ -2,11 +2,9 @@ import os
 
 from pathlib import Path
 from tqdm import tqdm, trange
-from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
-import wfdb
 
 from models import FCN_DAE
 from datasets.noisy_ecg import NOISY_ECG
@@ -35,11 +33,11 @@ if __name__ == "__main__":
     # load dataset
     train_dataloader = DataLoader(
         NOISY_ECG(root="./data/physionet.org/files/", channel=[0], window_size=1024, train=True),
-        batch_size=batch_size, num_workers=4, pin_memory=True, shuffle=True,
+        batch_size=batch_size, shuffle=True,
     )
     val_dataloader = DataLoader(
         NOISY_ECG(root="./data/physionet.org/files/", channel=[0], window_size=1024, train=False),
-        batch_size=batch_size, num_workers=4, pin_memory=True, shuffle=True,
+        batch_size=batch_size, shuffle=False,
     )
     max_iter_per_epoch = 1024
 

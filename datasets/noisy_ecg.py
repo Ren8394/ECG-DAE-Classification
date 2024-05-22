@@ -1,5 +1,6 @@
 from pathlib import Path
 from torch.utils.data import IterableDataset
+from sklearn.preprocessing import MinMaxScaler
 
 import torch
 import numpy as np
@@ -36,6 +37,11 @@ class NOISY_ECG(IterableDataset):
             clean_signal = signal[random_start:random_start+self.window_size][:, 0]
             noisy_signal = self.add_noise(clean_signal, np.random.choice(["bw", "em", "ma"]), np.random.randint(-6, 24), self.train)
         
+            # normalize signal
+            scaler = MinMaxScaler()
+            clean_signal = scaler.fit_transform(clean_signal.reshape(-1, 1)).reshape(-1)
+            noisy_signal = scaler.transform(noisy_signal.reshape(-1, 1)).reshape(-1)
+
             clean_signal = torch.from_numpy(clean_signal.reshape(1, self.window_size)).float()
             noisy_signal = torch.from_numpy(noisy_signal.reshape(1, self.window_size)).float()
 
@@ -64,7 +70,7 @@ if __name__ == "__main__":
     from torch.utils.data import DataLoader
 
     noisy_ecg = NOISY_ECG()
-    dataloader = DataLoader(noisy_ecg, batch_size=4, num_workers=4)
+    dataloader = DataLoader(noisy_ecg, batch_size=4, num_workers=0)
     for noisy, clean in dataloader:
         print(noisy.shape, clean.shape)
         break
