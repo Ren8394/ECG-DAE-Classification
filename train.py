@@ -21,7 +21,7 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 if __name__ == "__main__":
     # hyperparameters
     lr = 0.0001
-    batch_size = 128
+    batch_size = 64
     epochs = 64
 
     # load model
@@ -58,6 +58,7 @@ if __name__ == "__main__":
             if i >= max_iter_per_epoch:
                 break
         average_train_loss.append(train_loss / (i+1))
+        print(f"Epoch {epoch+1} - Train Loss: {train_loss / (i+1)}")
         scheduler.step()
 
         # validation
@@ -70,8 +71,9 @@ if __name__ == "__main__":
             if i >= max_iter_per_epoch:
                 break
         average_val_loss.append(val_loss / (i+1))
+        print(f"Epoch {epoch+1} - Validation Loss: {val_loss / (i+1)}")
         # save best model
-        if (val_loss / (i+1)) < best_loss:
+        if float((val_loss / (i+1))) < best_loss:
             best_loss = average_val_loss
             Path("./weights/FCN_DAE").mkdir(parents=True, exist_ok=True)
             torch.save(model.state_dict(), f"./weights/FCN_DAE/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}.pth")
