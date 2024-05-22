@@ -1,6 +1,8 @@
 /data/physionet.org/
 test.ipynb
 .DS_Store
+/results/
+/weights/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
