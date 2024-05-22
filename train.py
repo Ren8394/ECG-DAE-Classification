@@ -75,12 +75,12 @@ if __name__ == "__main__":
         # save best model
         if (val_loss / (i+1)) < best_loss:
             best_loss = average_val_loss
-            Path("./weights").mkdir(parents=True, exist_ok=True)
-            torch.save(model.state_dict(), f"./weights/FCN_DAE_lr{str(lr).split('.')[-1]}.pth")
+            Path("./weights/FCN_DAE").mkdir(parents=True, exist_ok=True)
+            torch.save(model.state_dict(), f"./weights/FCN_DAE/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}.pth")
 
     # save loss
-    Path("./results/FCN_DAE/").mkdir(parents=True, exist_ok=True)
-    np.savetxt("./results/FCN_DAE/train_loss.txt", np.array(train_loss), fmt="%.4f")
-    np.savetxt("./results/FCN_DAE/val_loss.txt", np.array(val_loss), fmt="%.4f")
+    Path(f"./results/FCN_DAE/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}").mkdir(parents=True, exist_ok=True)
+    np.savetxt(f"./results/FCN_DAE/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}/train_loss.txt", np.array(train_loss), fmt="%.4f")
+    np.savetxt(f"./results/FCN_DAE/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}/val_loss.txt", np.array(val_loss), fmt="%.4f")
 
             
