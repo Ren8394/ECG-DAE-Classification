@@ -33,11 +33,11 @@ if __name__ == "__main__":
     # load dataset
     train_dataloader = DataLoader(
         NOISY_ECG(root="./data/physionet.org/files/", channel=[0], window_size=1024, train=True),
-        batch_size=batch_size, shuffle=True,
+        batch_size=batch_size,
     )
     val_dataloader = DataLoader(
         NOISY_ECG(root="./data/physionet.org/files/", channel=[0], window_size=1024, train=False),
-        batch_size=batch_size, shuffle=False,
+        batch_size=batch_size,
     )
     max_iter_per_epoch = 1024
 
