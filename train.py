@@ -73,7 +73,7 @@ if __name__ == "__main__":
         average_val_loss.append(val_loss / (i+1))
         print(f"Epoch {epoch+1} - Validation Loss: {val_loss / (i+1)}")
         # save best model
-        if float((val_loss / (i+1))) < best_loss:
+        if (val_loss / (i+1)) < best_loss:
             best_loss = average_val_loss
             Path("./weights/FCN_DAE").mkdir(parents=True, exist_ok=True)
             torch.save(model.state_dict(), f"./weights/FCN_DAE/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}.pth")
