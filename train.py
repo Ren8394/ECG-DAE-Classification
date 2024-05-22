@@ -48,7 +48,7 @@ if __name__ == "__main__":
         # train
         model.train()
         train_loss = 0
-        for i, (noisy_signal, clean_signal) in tqdm(enumerate(train_dataloader), desc=f"Train {epoch+1} Epoch", leave=False):
+        for i, (noisy_signal, clean_signal) in tqdm(enumerate(train_dataloader), desc=f"Train {epoch+1} Epoch", total=max_iter_per_epoch, leave=False):
             optimizer.zero_grad()
             output, _ = model(noisy_signal.to(DEVICE))
             loss = criterion(output, clean_signal.to(DEVICE))
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         # validation
         model.eval()
         val_loss = 0
-        for i, (noisy_signal, clean_signal) in tqdm(enumerate(val_dataloader), desc=f"Validate {epoch+1} Epoch", leave=False):
+        for i, (noisy_signal, clean_signal) in tqdm(enumerate(val_dataloader), desc=f"Validate {epoch+1} Epoch", total=max_iter_per_epoch, leave=False):
             output, _ = model(noisy_signal.to(DEVICE))
             loss = criterion(output, clean_signal.to(DEVICE))
             val_loss += loss.item()
