@@ -27,7 +27,7 @@ if __name__ == "__main__":
     # load model
     model = FCN_DAE().to(DEVICE)
     criterion = torch.nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr)
+    optimizer = torch.optim.AdamW(model.parameters(), lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.8)
 
     # load dataset
