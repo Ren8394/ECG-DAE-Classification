@@ -4,54 +4,54 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class FCN_DAE(nn.Module):
-    def __init__(self, in_dim=1024, latent_dim=32):
+    def __init__(self, in_dim=1024, latent_dim=32, use_bn=True):
         super(FCN_DAE, self).__init__()
         self.in_dim = in_dim
         self.latent_dim = latent_dim
 
         # Encoder
         self.encoder = nn.Sequential(
-            nn.Conv1d(1, 16, kernel_size=3, stride=1, padding=1),
-            nn.MaxPool1d(2),
-            nn.BatchNorm1d(16),
+            nn.Conv1d(1, 16, kernel_size=3, stride=1, padding=1),   
+            nn.MaxPool1d(2),                                       
+            nn.BatchNorm1d(16) if use_bn else nn.Identity(),                                     
             nn.ELU(),
-            nn.Conv1d(16, 32, kernel_size=3, stride=1, padding=1),
-            nn.MaxPool1d(2),
-            nn.BatchNorm1d(32),
+            nn.Conv1d(16, 32, kernel_size=3, stride=1, padding=1), 
+            nn.MaxPool1d(2),                                      
+            nn.BatchNorm1d(32) if use_bn else nn.Identity(),
             nn.ELU(),
-            nn.Conv1d(32, 32, kernel_size=3, stride=1, padding=1),
-            nn.MaxPool1d(2),
-            nn.BatchNorm1d(32),
+            nn.Conv1d(32, 32, kernel_size=3, stride=1, padding=1),  
+            nn.MaxPool1d(2),                               
+            nn.BatchNorm1d(32) if use_bn else nn.Identity(),
             nn.ELU(),
-            nn.Conv1d(32, 16, kernel_size=3, stride=1, padding=1),
-            nn.MaxPool1d(2),
-            nn.BatchNorm1d(16),
+            nn.Conv1d(32, 16, kernel_size=3, stride=1, padding=1), 
+            nn.MaxPool1d(2),                             
+            nn.BatchNorm1d(16) if use_bn else nn.Identity(),
             nn.ELU(),
-            nn.Conv1d(16, 1, kernel_size=3, stride=1, padding=1),
-            nn.MaxPool1d(2),
-            nn.BatchNorm1d(1),
+            nn.Conv1d(16, 1, kernel_size=3, stride=1, padding=1), 
+            nn.MaxPool1d(2), 
+            nn.BatchNorm1d(1) if use_bn else nn.Identity(),
             nn.ELU(),
             nn.Flatten(),
         )
         # Decoder
         self.decoder = nn.Sequential(
             nn.ConvTranspose1d(1, 1, kernel_size=3, stride=2, padding=1, output_padding=1),
-            nn.BatchNorm1d(1),
+            nn.BatchNorm1d(1) if use_bn else nn.Identity(),
             nn.ELU(),
             nn.ConvTranspose1d(1, 16, kernel_size=3, stride=2, padding=1, output_padding=1),
-            nn.BatchNorm1d(16),
+            nn.BatchNorm1d(16) if use_bn else nn.Identity(),
             nn.ELU(),
             nn.ConvTranspose1d(16, 32, kernel_size=3, stride=2, padding=1, output_padding=1),
-            nn.BatchNorm1d(32),
+            nn.BatchNorm1d(32) if use_bn else nn.Identity(),
             nn.ELU(),
             nn.ConvTranspose1d(32, 32, kernel_size=3, stride=2, padding=1, output_padding=1),
-            nn.BatchNorm1d(32),
+            nn.BatchNorm1d(32) if use_bn else nn.Identity(),
             nn.ELU(),
             nn.ConvTranspose1d(32, 16, kernel_size=3, stride=2, padding=1, output_padding=1),
-            nn.BatchNorm1d(16),
+            nn.BatchNorm1d(16) if use_bn else nn.Identity(),
             nn.ELU(),
             nn.ConvTranspose1d(16, 1, kernel_size=3, stride=2, padding=1, output_padding=1),
-            nn.BatchNorm1d(1),
+            nn.BatchNorm1d(1) if use_bn else nn.Identity(),
             nn.ELU(),
             nn.Conv1d(1, 1, kernel_size=3, stride=2, padding=1),
         )
@@ -77,7 +77,7 @@ class FCN_DAE(nn.Module):
                 nn.init.constant_(m.bias, 0)
 
 if __name__ == "__main__":
-    model = FCN_DAE()
-    x = torch.randn(4, 1, 1024)
+    model = FCN_DAE(use_bn=False)
+    x = torch.randn(1, 1, 1024)
     y, latent = model(x)
     print(y.shape, latent.shape)
