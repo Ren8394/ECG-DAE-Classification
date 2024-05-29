@@ -23,10 +23,14 @@ if __name__ == "__main__":
     lr = 0.001
     batch_size = 64
     epochs = 64
+    model_name = "FCN_DAE"
+    assert model_name in ["FCN_DAE", "BLSTM"], "Model name must be 'FCN_DAE' or 'BLSTM'"
 
     # load model
-    model = FCN_DAE().to(DEVICE)    # FCN_DAE 
-    # model = BLSTM().to(DEVICE)      # BLSTM
+    if model_name == "FCN_DAE":
+        model = FCN_DAE().to(DEVICE)
+    elif model_name == "BLSTM":
+        model = BLSTM().to(DEVICE)
     criterion = torch.nn.MSELoss()
     optimizer = torch.optim.AdamW(model.parameters(), lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.8)
@@ -45,7 +49,7 @@ if __name__ == "__main__":
     best_loss = np.inf
     average_train_loss = []
     average_val_loss = []
-    for epoch in trange(epochs, desc="FCN_DAE Training"):
+    for epoch in trange(epochs, desc=f"{model_name} Training"):
         # train
         model.train()
         train_loss = 0
@@ -76,12 +80,12 @@ if __name__ == "__main__":
         # save best model
         if float(val_loss / (i+1)) < best_loss:
             best_loss = float(val_loss / (i+1))
-            Path("./weights/FCN_DAE").mkdir(parents=True, exist_ok=True)
-            torch.save(model.state_dict(), f"./weights/FCN_DAE/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}.pth")
+            Path(f"./weights/{model_name}").mkdir(parents=True, exist_ok=True)
+            torch.save(model.state_dict(), f"./weights/{model_name}/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}.pth")
 
     # save loss
-    Path(f"./results/FCN_DAE/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}").mkdir(parents=True, exist_ok=True)
-    np.savetxt(f"./results/FCN_DAE/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}/train_loss.txt", np.array(train_loss), fmt="%.4f")
-    np.savetxt(f"./results/FCN_DAE/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}/val_loss.txt", np.array(val_loss), fmt="%.4f")
+    Path(f"./results/{model_name}/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}").mkdir(parents=True, exist_ok=True)
+    np.savetxt(f"./results/{model_name}/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}/train_loss.txt", np.array(train_loss), fmt="%.4f")
+    np.savetxt(f"./results/{model_name}/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}/val_loss.txt", np.array(val_loss), fmt="%.4f")
 
             
