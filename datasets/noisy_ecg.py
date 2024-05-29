@@ -39,8 +39,8 @@ class NOISY_ECG(IterableDataset):
         
             # normalize signal
             scaler = MinMaxScaler()
-            clean_signal = scaler.fit_transform(clean_signal.reshape(-1, 1)).reshape(-1)
-            noisy_signal = scaler.transform(noisy_signal.reshape(-1, 1)).reshape(-1)
+            noisy_signal = scaler.fit_transform(noisy_signal.reshape(-1, 1)).reshape(-1)
+            clean_signal = scaler.transform(clean_signal.reshape(-1, 1)).reshape(-1)
 
             clean_signal = torch.from_numpy(clean_signal.reshape(1, self.window_size)).float()
             noisy_signal = torch.from_numpy(noisy_signal.reshape(1, self.window_size)).float()
