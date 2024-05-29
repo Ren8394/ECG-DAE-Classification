@@ -8,7 +8,7 @@ import torch
 import torch.nn.functional as F
 import wfdb
 
-from models import FCN_DAE
+from models import FCN_DAE, BLSTM
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 
@@ -25,7 +25,8 @@ if __name__ == "__main__":
     clean_signal_118, _ = wfdb.rdsamp(f"./data/physionet.org/files/mitdb/1.0.0/118", channels=[0])   # only use first channel for 118
     clean_signal_119, _ = wfdb.rdsamp(f"./data/physionet.org/files/mitdb/1.0.0/119", channels=[0])   # only use first channel for 119
 
-    model = FCN_DAE().to(DEVICE)
+    model = FCN_DAE().to(DEVICE)    # FCN_DAE
+    # model = BLSTM().to(DEVICE)      # BLSTM
     model.load_state_dict(torch.load("./weights/FCN_DAE_lr0001.pth", map_location=DEVICE))
 
     # test model and visualize results

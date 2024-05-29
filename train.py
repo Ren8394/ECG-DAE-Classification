@@ -6,7 +6,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from models import FCN_DAE
+from models import FCN_DAE, BLSTM
 from datasets.noisy_ecg import NOISY_ECG
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
@@ -20,12 +20,13 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 if __name__ == "__main__":
     # hyperparameters
-    lr = 0.0001
+    lr = 0.001
     batch_size = 64
     epochs = 64
 
     # load model
-    model = FCN_DAE().to(DEVICE)
+    model = FCN_DAE().to(DEVICE)    # FCN_DAE 
+    # model = BLSTM().to(DEVICE)      # BLSTM
     criterion = torch.nn.MSELoss()
     optimizer = torch.optim.AdamW(model.parameters(), lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.8)
@@ -58,7 +59,7 @@ if __name__ == "__main__":
             if i >= max_iter_per_epoch:
                 break
         average_train_loss.append(train_loss / (i+1))
-        print(f"Epoch {epoch+1} - Train Loss: {train_loss / (i+1)}")
+        print(f"Epoch {epoch+1} - Train Loss: {(train_loss / (i+1)):.4f}")
         scheduler.step()
 
         # validation
@@ -71,7 +72,7 @@ if __name__ == "__main__":
             if i >= max_iter_per_epoch:
                 break
         average_val_loss.append(val_loss / (i+1))
-        print(f"Epoch {epoch+1} - Validation Loss: {val_loss / (i+1)}")
+        print(f"Epoch {epoch+1} - Validation Loss: {(val_loss / (i+1)):.4f}")
         # save best model
         if float(val_loss / (i+1)) < best_loss:
             best_loss = float(val_loss / (i+1))
