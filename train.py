@@ -20,7 +20,7 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 if __name__ == "__main__":
     # hyperparameters
-    lr = 0.001
+    lr = 0.01
     batch_size = 64
     epochs = 64
     model_name = "FCN_DAE"
@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     # save loss
     Path(f"./results/{model_name}/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}").mkdir(parents=True, exist_ok=True)
-    np.savetxt(f"./results/{model_name}/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}/train_loss.txt", np.array(train_loss), fmt="%.4f")
-    np.savetxt(f"./results/{model_name}/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}/val_loss.txt", np.array(val_loss), fmt="%.4f")
+    np.savetxt(f"./results/{model_name}/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}/train_loss.txt", np.array(average_train_loss), fmt="%.4f")
+    np.savetxt(f"./results/{model_name}/lr{str(lr).split('.')[-1]}_b{batch_size}_e{epochs}/val_loss.txt", np.array(average_val_loss), fmt="%.4f")
 
             

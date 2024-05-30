@@ -31,7 +31,7 @@ if __name__ == "__main__":
     assert model_name in ["FCN_DAE", "BLSTM"], "Model name must be 'FCN_DAE' or 'BLSTM'"
     if model_name == "FCN_DAE":
         model = FCN_DAE(use_bn=False).to(DEVICE)    # FCN_DAE
-        ckpt_path = "./weights/FCN_DAE/lr0001_b64_e64.pth"
+        ckpt_path = "./weights/FCN_DAE/lr001_b64_e64.pth"
         model.load_state_dict(torch.load(ckpt_path, map_location=DEVICE), strict=False)
     elif model_name == "BLSTM":
         model = BLSTM().to(DEVICE)
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         signal, _ = wfdb.rdsamp(f"./data/physionet.org/files/nstdb/1.0.0/{subject}", channels=[0])
         target_signal = clean_signal_118 if "118" in subject else clean_signal_119
 
-        for j in tqdm(range(0, 650000, 1024), desc=f"Step {j}", leave=False):
+        for j in tqdm(range(0, 650000, 1024), desc=f"Step", leave=False):
             noisy_signal = signal[j:j+1024][:, 0]
             clean_signal = target_signal[j:j+1024][:, 0]
 
@@ -53,7 +53,7 @@ if __name__ == "__main__":
                     continue
             
             noisy_signal = scaler.fit_transform(noisy_signal.reshape(-1, 1)).reshape(-1)
-            clean_signal = scaler.transform(clean_signal.reshape(-1, 1)).reshape(-1)
+            clean_signal = scaler.fit_transform(clean_signal.reshape(-1, 1)).reshape(-1)
 
             clean_signal = torch.from_numpy(clean_signal.reshape(1, 1024)).float().to(DEVICE)
             noisy_signal = torch.from_numpy(noisy_signal.reshape(1, 1024)).float().to(DEVICE)
